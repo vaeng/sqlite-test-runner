@@ -42,8 +42,10 @@ test_output=$(sqlite3 '' --init "./${slug}_test.sql" -bail  '.exit' 2>&1)
 if [ $? -ne 0 ]; then
     jq -n --arg output "${test_output}" '{version: 3, status: "error", message: $output}' > ${results_file}
 else
-    cat ./output.json | jq '{ "version": 3, "status": "fail", "message": null, "tests": . } | del(..|nulls) | .status = if  any(.tests[]; .status == "fail") then "fail" else "pass" end' > results.json
+    cat ./output.json | jq '{ "version": 3, "status": "fail", "message": null, "tests": . } | .status = if  any(.tests[]; .status == "fail") then "fail" else "pass" end' > results.json
     rm ./output.json
+    # cat ./results.json | jq '.tests[] | select(.status == "fail").output = "yahoo" | del(..|nulls)' > results.json
+    rm ./user_output.md || true
 fi
 
 echo "${slug}: done"

@@ -10,7 +10,8 @@
 
 # Example:
 # ./bin/run-tests.sh
-
+sqlite3 --version
+exit 1
 exit_code=0
 
 # Iterate over all test directories
